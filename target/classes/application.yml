@@ -34,13 +34,13 @@
         password: 1111
       jpa:
         hibernate:
-          ddl-auto: update
+          ddl-auto: update   # на старте удобно; в проде лучше validate + миграции
         properties:
           hibernate:
             format_sql: true
             jdbc.time_zone: UTC
-            dialect: org.hibernate.dialect.MySQL8Dialect
+            dialect: org.hibernate.dialect.MySQL8Dialect  # можно опустить — Hibernate сам определит по драйверу
             server: port=8081
       liquibase:
-        enabled: false
-
+        enabled: false   # если миграции ещё не готовы — отключите на время
+        #change-log: classpath:db/changelog-master.yaml
