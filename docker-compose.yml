@@ -1,9 +1,50 @@
 # 
 # docker-compose.yml — определяет сервисы для разработки и тестирования.
 
-Что нужно сделать:
-  - Настроить сервисы для:
-      - PostgreSQL (или MySQL) с начальной базой.
-      - Приложения Spring Boot (если нужно).
-  - Открыть нужные порты (например, 5432, 8080).
-  - Настроить volume для хранения данных БД.
+#Что нужно сделать:
+# - Настроить сервисы для:
+#      - PostgreSQL (или MySQL) с начальной базой.
+#      - Приложения Spring Boot (если нужно).
+#  - Открыть нужные порты (например, 5432, 8080).
+# - Настроить volume для хранения данных БД.
+
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: cards_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shema_bankcards
+      MYSQL_USER: Ann
+      MYSQL_PASSWORD: 1111
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--default-time-zone=+00:00"
+    ]
+    ports:
+      - "3306:3306"
+    volumes:
+      - cards_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "cards", "-pcards"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:5432/shema_bankcards?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+      SPRING_DATASOURCE_USERNAME: Ann
+      SPRING_DATASOURCE_PASSWORD: 1111
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+volumes:
+  cards_mysql_data:

@@ -1,8 +1,46 @@
 #
 # application.yml — главный конфигурационный файл Spring Boot.
 
-Что нужно сделать:
-  - Указать настройки подключения к базе данных.
-  - Указать порт приложения.
-  - Настроить параметры безопасности и JWT.
-  - Включить Swagger UI.
+#Что нужно сделать:
+#  - Указать настройки подключения к базе данных.
+#  - Указать порт приложения.
+#  - Настроить параметры безопасности и JWT.
+#  - Включить Swagger UI.
+#spring:
+#  datasource:
+#   url: dbc:mysql://localhost:5432/shema_bankcards #jdbc:postgresql://localhost:5432/cards
+#   username: Ann
+#   password: 1111
+# jpa:
+#   hibernate:
+#     ddl-auto: validate
+#   properties:
+#     hibernate:
+#       format_sql: true
+# liquibase:
+#   change-log: classpath:db/changelog-master.yaml
+#
+#logging:
+# level:
+#   org.hibernate.SQL: INFO
+#   org.springframework.security: INFO
+
+
+    #---------------
+    spring:
+      datasource:
+        url: jdbc:mysql://localhost:5432/shema_bankcards?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+        username: Ann
+        password: 1111
+      jpa:
+        hibernate:
+          ddl-auto: update
+        properties:
+          hibernate:
+            format_sql: true
+            jdbc.time_zone: UTC
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            server: port=8081
+      liquibase:
+        enabled: false
+
